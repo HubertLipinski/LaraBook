@@ -19,24 +19,277 @@
         }
     ],
     "paths": {
-        "/user/test": {
-            "get": {
+        "/user/store": {
+            "post": {
                 "tags": [
                     "user"
                 ],
-                "summary": "test",
-                "description": "test",
-                "operationId": "test",
+                "summary": "Store user",
+                "description": "Store user",
+                "operationId": "store",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/UserStoreRequest"
+                },
                 "responses": {
                     "200": {
-                        "description": "success"
+                        "description": "Success response"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity"
                     }
                 },
                 "security": [
                     {
-                        "bearer": []
+                        "Password Based": []
                     }
                 ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "BookCollection": {
+                "title": "BookCollection",
+                "description": "Book collection",
+                "properties": {
+                    "books": {
+                        "title": "books",
+                        "description": "Array of books",
+                        "type": "array",
+                        "format": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/BookResource"
+                        }
+                    },
+                    "pagination": {
+                        "title": "pagination",
+                        "description": "Collection pagination data"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "BookCollection"
+                }
+            },
+            "BookResource": {
+                "title": "BookResource",
+                "description": "Book resource",
+                "properties": {
+                    "id": {
+                        "title": "id",
+                        "description": "Book id",
+                        "format": "integer",
+                        "example": 1
+                    },
+                    "title": {
+                        "title": "title",
+                        "description": "Book title",
+                        "format": "string",
+                        "example": "Title"
+                    },
+                    "description": {
+                        "title": "description",
+                        "description": "Book description",
+                        "format": "string",
+                        "example": "Description"
+                    },
+                    "short_description": {
+                        "title": "short_description",
+                        "description": "Book short description",
+                        "format": "string",
+                        "example": "Short description"
+                    },
+                    "created_at": {
+                        "title": "created_at",
+                        "description": "User created at",
+                        "format": "string",
+                        "example": "2021-09-06T20:58:20.000000Z"
+                    },
+                    "updated_at": {
+                        "title": "created_at",
+                        "description": "User updated at",
+                        "format": "string",
+                        "example": "2021-09-06T20:58:20.000000Z"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "BookResource"
+                }
+            },
+            "PaginationResource": {
+                "title": "PaginationResource",
+                "description": "Pagination resource",
+                "properties": {
+                    "total": {
+                        "title": "total",
+                        "description": "Total number of items in the data store",
+                        "format": "int64",
+                        "example": "0"
+                    },
+                    "count": {
+                        "title": "count",
+                        "description": "Number of items for the current page",
+                        "format": "int64",
+                        "example": 0
+                    },
+                    "per_page": {
+                        "title": "per_page",
+                        "description": "Number of items to be shown per page",
+                        "format": "int64",
+                        "example": 10
+                    },
+                    "current_page": {
+                        "title": "current_page",
+                        "description": "Current page number",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "total_pages": {
+                        "title": "total_pages",
+                        "description": "Last available page number",
+                        "format": "int64",
+                        "example": 0
+                    },
+                    "links": {
+                        "properties": {
+                            "previous_page": {
+                                "type": "string",
+                                "example": "null"
+                            },
+                            "next_page": {
+                                "type": "string",
+                                "example": "null"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "PaginationResource"
+                }
+            },
+            "UserResource": {
+                "title": "UserResource",
+                "description": "User resource",
+                "properties": {
+                    "id": {
+                        "title": "id",
+                        "description": "User id",
+                        "format": "integer",
+                        "example": 1
+                    },
+                    "firstname": {
+                        "title": "firstname",
+                        "description": "User firstname",
+                        "format": "string",
+                        "example": "Jan"
+                    },
+                    "lastname": {
+                        "title": "lastname",
+                        "description": "User lastname",
+                        "format": "string",
+                        "example": "Kowalski"
+                    },
+                    "email": {
+                        "title": "email",
+                        "description": "User email",
+                        "format": "string",
+                        "example": "user@email.com"
+                    },
+                    "slug": {
+                        "title": "slug",
+                        "description": "User slug",
+                        "format": "string",
+                        "example": "jan-kowalski"
+                    },
+                    "created_at": {
+                        "title": "created_at",
+                        "description": "User created at",
+                        "format": "string",
+                        "example": "2021-09-06T20:58:20.000000Z"
+                    },
+                    "updated_at": {
+                        "title": "created_at",
+                        "description": "User updated at",
+                        "format": "string",
+                        "example": "2021-09-06T20:58:20.000000Z"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "UserResource"
+                }
+            }
+        },
+        "requestBodies": {
+            "UserStoreRequest": {
+                "description": "User store request",
+                "required": true,
+                "content": {
+                    "multipart/form-data": {
+                        "schema": {
+                            "required": [
+                                "firstname",
+                                "lastname",
+                                "email",
+                                "slug",
+                                "password"
+                            ],
+                            "properties": {
+                                "firstname": {
+                                    "title": "firstname",
+                                    "description": "User first name",
+                                    "format": "string",
+                                    "example": "Jan"
+                                },
+                                "lastname": {
+                                    "title": "lastname",
+                                    "description": "User last name",
+                                    "format": "string",
+                                    "example": "Kowalski"
+                                },
+                                "email": {
+                                    "title": "User name",
+                                    "description": "User's first name",
+                                    "format": "string",
+                                    "example": "user@email.com"
+                                },
+                                "slug": {
+                                    "title": "slug",
+                                    "description": "Slug",
+                                    "format": "string",
+                                    "example": "jan-kowalski"
+                                },
+                                "password": {
+                                    "title": "password",
+                                    "description": "Password",
+                                    "format": "password",
+                                    "example": "password"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "Password Based": {
+                "type": "oauth2",
+                "description": "Authenticate to API",
+                "in": "header",
+                "flows": {
+                    "password": {
+                        "tokenUrl": "/oauth/token",
+                        "scopes": {}
+                    }
+                },
+                "scheme": "token"
             }
         }
     },

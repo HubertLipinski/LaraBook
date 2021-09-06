@@ -25,8 +25,26 @@ use Symfony\Component\HttpFoundation\Response as ResponseAlias;
  * ),
  * @OA\Server(
  *      url="http://localhost/api/",
- *      description="Localhost server"
+ *      description="Localhost server",
  * ),
+ * @OA\SecurityScheme(
+ *     type="oauth2",
+ *     description="Authenticate to API",
+ *     name="Password Based",
+ *     in="header",
+ *     scheme="token",
+ *     securityScheme="Password Based",
+ *     @OA\Flow(
+ *         flow="password",
+ *         tokenUrl="/oauth/token",
+ *         scopes={}
+ *     )
+ * )
+ * @OA\OpenApi(
+ *   security={
+ *     { "oauth2": {"read:oauth2"} }
+ *   }
+ * )
  */
 class Controller extends BaseController
 {

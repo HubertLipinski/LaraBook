@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\UserController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\User\UserBookController;
+use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,5 +17,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['middleware' => 'auth:api'], function () {
-    Route::get('/test', [UserController::class, 'test']);
+    Route::get('/auth/logout', [AuthController::class, 'logout']);
+
+    Route::group(['prefix' => 'user'], function () {
+        Route::post('/store', [UserController::class, 'store']);
+        Route::put('/edit', [UserController::class, 'update']);
+        Route::group(['prefix' => 'books'], function () {
+            Route::get('/', [UserBookController::class, 'getList']);
+//            Route::post('store', [UserBookController::class, 'index']);
+        });
+    });
 });
