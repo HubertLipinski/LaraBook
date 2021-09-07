@@ -21,7 +21,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::group(['prefix' => 'user'], function () {
         Route::post('/store', [UserController::class, 'store']);
-        Route::put('/edit', [UserController::class, 'update']);
+        Route::put('{user_id}/edit', [UserController::class, 'update'])
+            ->where('user_id', ['0-9+']);
         Route::group(['prefix' => 'books'], function () {
             Route::get('/', [UserBookController::class, 'getList']);
 //            Route::post('store', [UserBookController::class, 'index']);

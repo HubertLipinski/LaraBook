@@ -12,6 +12,12 @@ class Book extends Model
 
     protected $table = 'books';
 
+    protected $fillable = [
+        'title',
+        'description',
+        'short_description',
+    ];
+
     public function users(): HasMany
     {
         return $this->hasMany(User::class, 'user_id');

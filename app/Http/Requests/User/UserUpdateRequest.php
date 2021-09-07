@@ -3,25 +3,19 @@
 namespace App\Http\Requests\User;
 
 use App\Http\Requests\BaseFormRequest;
-use Illuminate\Validation\Rules\Password;
+use App\Models\User;
+use App\Rules\User\UserEmailRule;
 
-class UserStoreRequest extends BaseFormRequest
+class UserUpdateRequest extends BaseFormRequest
 {
     /**
      * @OA\RequestBody(
-     *     request="UserStoreRequest",
-     *     description="User store request",
+     *     request="UserUpdateRequest",
+     *     description="User update request",
      *     required=true,
      *     @OA\MediaType(
      *         mediaType="multipart/form-data",
      *         @OA\Schema(
-     *             required={
-     *                  "firstname",
-     *                  "lastname",
-     *                  "email",
-     *                  "slug",
-     *                  "password",
-     *             },
      *             @OA\Property(
      *                 property="firstname",
      *                 title="firstname",
@@ -41,7 +35,7 @@ class UserStoreRequest extends BaseFormRequest
      *                 title="User name",
      *                 description="User email",
      *                 format="string",
-     *                 example="user@email.com"
+     *                 example="new@email.com"
      *             ),
      *             @OA\Property(
      *                 property="slug",
@@ -50,13 +44,6 @@ class UserStoreRequest extends BaseFormRequest
      *                 format="string",
      *                 example="jan-kowalski"
      *             ),
-     *             @OA\Property(
-     *                 property="password",
-     *                 title="password",
-     *                 description="Password",
-     *                 format="password",
-     *                 example="password"
-     *             )
      *         )
      *     )
      * )
@@ -69,22 +56,23 @@ class UserStoreRequest extends BaseFormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
+     * @param User $user
+     *
      * @return array
      */
-    public function rules(): array
+    public function rules(User $user): array
     {
         return [
-            'firstname' => 'required|string',
-            'lastname' => 'required|string',
-            'email' => 'required|email|unique:users,email',
-            'slug' => 'required|string',
-            'password' => ['required', Password::defaults()],
+            'firstname' => 'sometimes|string',
+            'lastname' => 'sometimes|string',
+            'email' => ['sometimes', 'email', 'bail', new UserEmailRule($user)],
+            'slug' => 'sometimes|string',
         ];
     }
 }

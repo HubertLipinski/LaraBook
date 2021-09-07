@@ -71,6 +71,16 @@ class Controller extends BaseController
      *
      * @return JsonResponse
      */
+    final public function responseNotFoundError(array $data = []): JsonResponse
+    {
+        return $this->errorResponse(Response::HTTP_NOT_FOUND, $data);
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return JsonResponse
+     */
     final public function responseForbiddenError(array $data = []): JsonResponse
     {
         return $this->errorResponse(Response::HTTP_FORBIDDEN, $data);
