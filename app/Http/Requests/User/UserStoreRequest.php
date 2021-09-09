@@ -21,6 +21,7 @@ class UserStoreRequest extends BaseFormRequest
      *                  "email",
      *                  "slug",
      *                  "password",
+     *                  "phone",
      *             },
      *             @OA\Property(
      *                 property="firstname",
