@@ -2,7 +2,7 @@
 Simple Book API
 
 ## Startup guide
-## Project
+### Project
 ```bash
 composer install
 cp .env.example .env
