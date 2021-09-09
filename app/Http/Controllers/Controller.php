@@ -54,7 +54,7 @@ use Symfony\Component\HttpFoundation\Response as ResponseAlias;
  * @OA\RequestBody(
  *    required=true,
  *    @OA\JsonContent(
- *       required={"grant_type", "client_id", "client_secret"},
+ *       required={"grant_type", "client_id", "client_secret", "username", "password"},
  *       @OA\Property(property="grant_type", type="string", example="password"),
  *       @OA\Property(property="client_id", type="string", example="id"),
  *       @OA\Property(property="client_secret", type="string", example="secret"),

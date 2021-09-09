@@ -422,7 +422,9 @@
                                 "required": [
                                     "grant_type",
                                     "client_id",
-                                    "client_secret"
+                                    "client_secret",
+                                    "username",
+                                    "password"
                                 ],
                                 "properties": {
                                     "grant_type": {
