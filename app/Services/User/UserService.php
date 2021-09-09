@@ -5,6 +5,7 @@ namespace App\Services\User;
 use App\Http\Requests\User\UserStoreRequest;
 use App\Http\Requests\User\UserUpdateRequest;
 use App\Models\User;
+use App\Notifications\UserAccountDeletedNotification;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
@@ -49,8 +50,21 @@ class UserService
         return $user;
     }
 
+    /**
+     * @param int $user_id
+     *
+     * @return bool
+     */
     public function deleteUser(int $user_id): bool
     {
+        $user = $this->user->find($user_id);
+        if (is_null($user) || ! auth()->user()->can('delete', $user)) {
+            return false;
+        }
+
+        $user->notify(new UserAccountDeletedNotification());
+        $user->delete();
+
         return true;
     }
 }

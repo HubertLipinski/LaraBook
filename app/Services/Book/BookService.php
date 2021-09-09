@@ -45,7 +45,7 @@ class BookService
         $validated = $request->validated();
         $description = $request->get('description', $book->description);
         $validated['description'] = htmlentities($description);
-        $this->book->update($validated);
+        $book->update($validated);
         return $book;
     }
 
@@ -56,6 +56,13 @@ class BookService
      */
     public function deleteBook(int $book_id): bool
     {
+        $book = $this->book->find($book_id);
+        if (is_null($book)) {
+            return false;
+        }
+
+        $book->delete();
+
         return true;
     }
 }

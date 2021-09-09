@@ -21,7 +21,43 @@ class UserBookController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     * path="/book",
+     * summary="Get user's book list",
+     * description="Get user's book list",
+     * operationId="getList",
+     * tags={ "book" },
+     * security={ {"Password Based": {} }},
+     * @OA\Parameter(
+     *     name="page",
+     *     in="query",
+     *     description="Pagination page",
+     *     required=false,
+     *     @OA\Schema(type="integer"),
+     * ),
+     * @OA\Parameter(
+     *     name="per_page",
+     *     in="query",
+     *     description="Pagination page",
+     *     required=false,
+     *     @OA\Schema(type="integer"),
+     * ),
+     * @OA\Response(
+     *     response=200,
+     *     description="Success response",
+     *     content={
+     *     @OA\MediaType(
+     *     mediaType="application/json",
+     *     @OA\Schema(
+     *         @OA\Property(property="status", type="string", example="success"),
+     *         @OA\Property(property="status_code", type="integer", example=200),
+     *         @OA\Property(property="data", type="object", ref="#/components/schemas/BookCollection"),
+     *         @OA\Property(property="errors", type="object")
+     *     ))
+     * }
+     * ),
+     * @OA\Response(response=401, description="Unauthenticated"),
+     * )
      *
      * @param Request $request
      *
@@ -34,58 +70,47 @@ class UserBookController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     * path="/user/{user_id}/book/{book_id}",
+     * summary="Add user book",
+     * description="Add user book",
+     * operationId="storeUserBook",
+     * tags={ "user" },
+     * security={ {"Password Based": {} }},
+     * @OA\Response(
+     *     response=200,
+     *     description="Success response",
+     *     content={
+     *     @OA\MediaType(
+     *     mediaType="application/json",
+     *     @OA\Schema(
+     *         @OA\Property(property="status", type="string", example="success"),
+     *         @OA\Property(property="status_code", type="integer", example=200),
+     *         @OA\Property(property="data", type="object",
+     *             @OA\Property(property="message", example="Book added")
+     *         ),
+     *         @OA\Property(property="errors", type="object")
+     *     ))
+     * }
+     * ),
+     * @OA\Response(response=401, description="Unauthenticated"),
+     * @OA\Response(response=403, description="Forbidden"),
+     * @OA\Response(response=404, description="Not found"),
+     * )
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param int $user_id
+     * @param int $book_id
+     *
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function storeUserBook(int $user_id, int $book_id): JsonResponse
     {
-        //
-    }
+        $userBook = $this->userBookService->addUserBook($user_id, $book_id);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+        if (! is_null($userBook)) {
+            return $this->responseSuccess(['message' => 'Book added']);
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return $this->responseForbiddenError(['message' => 'Access denied']);
     }
 }

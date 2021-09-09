@@ -28,7 +28,7 @@ class BookCollection extends ResourceCollection
      *     property="pagination",
      *     title="pagination",
      *     description="Collection pagination data",
-     *     @OA\Schema(ref="#/components/schemas/PaginationResource"),
+     *     ref="#/components/schemas/PaginationResource",
      * )
      */
 

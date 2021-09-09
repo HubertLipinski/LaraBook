@@ -44,6 +44,13 @@ class UserUpdateRequest extends BaseFormRequest
      *                 format="string",
      *                 example="jan-kowalski"
      *             ),
+     *             @OA\Property(
+     *                 property="phone",
+     *                 title="phone",
+     *                 description="User phone number",
+     *                 format="string",
+     *                 example="123456789"
+     *             ),
      *         )
      *     )
      * )
@@ -56,7 +63,7 @@ class UserUpdateRequest extends BaseFormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -73,6 +80,7 @@ class UserUpdateRequest extends BaseFormRequest
             'lastname' => 'sometimes|string',
             'email' => ['sometimes', 'email', 'bail', new UserEmailRule($user)],
             'slug' => 'sometimes|string',
+            'phone' => 'sometimes|string|size:9',
         ];
     }
 }

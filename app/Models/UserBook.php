@@ -12,6 +12,8 @@ class UserBook extends Model
 
     protected $table = 'user_books';
 
+    protected $guarded = [];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');

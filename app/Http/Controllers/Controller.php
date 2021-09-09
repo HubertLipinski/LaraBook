@@ -45,6 +45,40 @@ use Symfony\Component\HttpFoundation\Response as ResponseAlias;
  *     { "oauth2": {"read:oauth2"} }
  *   }
  * )
+ * @OA\Post(
+ * path="/oauth/token",
+ * summary="Login",
+ * description="Login",
+ * operationId="Login",
+ * tags={ "auth" },
+ * @OA\RequestBody(
+ *    required=true,
+ *    @OA\JsonContent(
+ *       required={"grant_type", "client_id", "client_secret"},
+ *       @OA\Property(property="grant_type", type="string", example="password"),
+ *       @OA\Property(property="client_id", type="string", example="id"),
+ *       @OA\Property(property="client_secret", type="string", example="secret"),
+ *       @OA\Property(property="username", type="string", format="email", example="user@email.com"),
+ *       @OA\Property(property="password", type="string", format="password", example="password"),
+ *    ),
+ * ),
+ * @OA\Response(
+ *     response=200,
+ *     description="Success response",
+ *     content={
+ *     @OA\MediaType(
+ *     mediaType="application/json",
+ *     @OA\Schema(
+ *         @OA\Property(property="token_type", type="string", example="Bearer"),
+ *         @OA\Property(property="expires_in", type="integer", example="31536000"),
+ *         @OA\Property(property="access_token", type="string", example="access_token"),
+ *         @OA\Property(property="refresh_token", type="string", example="refresh_token"),
+ *     ))
+ * }
+ * ),
+ * @OA\Response(response=401,description="Unauthenticated"),
+ * )
+ *
  */
 class Controller extends BaseController
 {

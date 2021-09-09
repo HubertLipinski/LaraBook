@@ -8,7 +8,6 @@ use App\Http\Requests\User\UserUpdateRequest;
 use App\Http\Resources\User\UserResource;
 use App\Services\User\UserService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
@@ -24,24 +23,30 @@ class UserController extends Controller
 
     /**
      * @OA\Post(
-     * path="/user/store",
+     * path="/user",
      * summary="Store user",
      * description="Store user",
      * operationId="store",
      * tags={ "user" },
-     * security={ {"Password Based": {} }},
+     * security={},
      * @OA\RequestBody(ref="#/components/requestBodies/UserStoreRequest"),
      * @OA\Response(
      *     response=200,
      *     description="Success response",
-     *     @OA\Property(property="status", type="string", example="success"),
-     *     @OA\Property(property="status_code", type="integer", example=200),
-     *     @OA\Property(property="data", type="object",
-     *         @OA\Property(property="user", ref="#/components/schemas/UserResource")
-     *     ),
-     *     @OA\Property(property="errors", type="object")
+     *     content={
+     *     @OA\MediaType(
+     *     mediaType="application/json",
+     *     @OA\Schema(
+     *         @OA\Property(property="status", type="string", example="success"),
+     *         @OA\Property(property="status_code", type="integer", example=200),
+     *         @OA\Property(property="data", type="object",
+     *             @OA\Property(property="user", ref="#/components/schemas/UserResource")
+     *         ),
+     *         @OA\Property(property="errors", type="object")
+     *     ))
+     * }
      * ),
-     * @OA\Response(response=401,description="Unauthenticated"),
+     * @OA\Response(response=401, description="Unauthenticated"),
      * @OA\Response(response=422, description="Unprocessable Entity"),
      * )
      *
@@ -58,25 +63,37 @@ class UserController extends Controller
 
     /**
      * @OA\Put(
-     * path="/user/{user_id}/edit",
+     * path="/user/{user_id}",
      * summary="Update user",
      * description="Update user",
      * operationId="update",
      * tags={ "user" },
      * security={ {"Password Based": {} }},
+     * @OA\Parameter(
+     *   name="user_id",
+     *   in="path",
+     *   description="User id",
+     *   required=true,
+     * ),
      * @OA\RequestBody(ref="#/components/requestBodies/UserUpdateRequest"),
      * @OA\Response(
      *     response=200,
      *     description="Success response",
-     *     @OA\Property(property="status", type="string", example="success"),
-     *     @OA\Property(property="status_code", type="integer", example=200),
-     *     @OA\Property(property="data", type="object",
-     *         @OA\Property(property="user", ref="#/components/schemas/UserResource")
-     *     ),
-     *     @OA\Property(property="errors", type="object")
+     *     content={
+     *     @OA\MediaType(
+     *     mediaType="application/json",
+     *     @OA\Schema(
+     *         @OA\Property(property="status", type="string", example="success"),
+     *         @OA\Property(property="status_code", type="integer", example=200),
+     *         @OA\Property(property="data", type="object",
+     *             @OA\Property(property="user", ref="#/components/schemas/UserResource")
+     *         ),
+     *         @OA\Property(property="errors", type="object")
+     *     ))
+     * }
      * ),
-     * @OA\Response(response=401,description="Unauthenticated"),
-     * @OA\Response(response=404,description="Not found"),
+     * @OA\Response(response=401, description="Unauthenticated"),
+     * @OA\Response(response=404, description="Not found"),
      * @OA\Response(response=422, description="Unprocessable Entity"),
      * )
      *
@@ -97,13 +114,52 @@ class UserController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     * path="/user/{user_id}",
+     * summary="Delete user",
+     * description="Delete user",
+     * operationId="destroy",
+     * tags={ "user" },
+     * security={ {"Password Based": {} }},
+     * @OA\Parameter(
+     *   name="user_id",
+     *   in="path",
+     *   description="User id",
+     *   required=true,
+     * ),
+     * @OA\Response(
+     *     response=200,
+     *     description="Success response",
+     *     content={
+     *     @OA\MediaType(
+     *     mediaType="application/json",
+     *     @OA\Schema(
+     *         @OA\Property(property="status", type="string", example="success"),
+     *         @OA\Property(property="status_code", type="integer", example=200),
+     *         @OA\Property(property="data", type="object",
+     *             @OA\Property(property="message", example="User deleted")
+     *         ),
+     *         @OA\Property(property="errors", type="object")
+     *     ))
+     * }
+     * ),
+     * @OA\Response(response=401, description="Unauthenticated"),
+     * @OA\Response(response=403, description="Forbidden"),
+     * @OA\Response(response=404, description="Not found"),
+     * )
      *
-     * @param  int  $id
-     * @return Response
+     * @param int $user_id
+     *
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(int $user_id): JsonResponse
     {
-        //
+        $deleted = $this->userService->deleteUser($user_id);
+
+        if (! $deleted) {
+            return $this->responseForbiddenError(['message' => 'Access denied']);
+        }
+
+        return $this->responseSuccess(['message' => 'User deleted']);
     }
 }

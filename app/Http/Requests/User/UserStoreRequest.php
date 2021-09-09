@@ -56,7 +56,14 @@ class UserStoreRequest extends BaseFormRequest
      *                 description="Password",
      *                 format="password",
      *                 example="password"
-     *             )
+     *             ),
+     *             @OA\Property(
+     *                 property="phone",
+     *                 title="phone",
+     *                 description="User phone number",
+     *                 format="string",
+     *                 example="123456789"
+     *             ),
      *         )
      *     )
      * )
@@ -85,6 +92,7 @@ class UserStoreRequest extends BaseFormRequest
             'email' => 'required|email|unique:users,email',
             'slug' => 'required|string',
             'password' => ['required', Password::defaults()],
+            'phone' => 'required|string|size:9',
         ];
     }
 }

@@ -19,7 +19,533 @@
         }
     ],
     "paths": {
-        "/user/store": {
+        "/auth/logout": {
+            "put": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Log out",
+                "description": "Log out",
+                "operationId": "logout",
+                "responses": {
+                    "200": {
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "status_code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "message": {
+                                                    "example": "Successfully logged out"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "Password Based": []
+                    }
+                ]
+            }
+        },
+        "/book": {
+            "get": {
+                "tags": [
+                    "book"
+                ],
+                "summary": "Get user's book list",
+                "description": "Get user's book list",
+                "operationId": "getList",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Pagination page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Pagination page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "status_code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/BookCollection"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "Password Based": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "book"
+                ],
+                "summary": "Store book",
+                "description": "Store book",
+                "operationId": "store",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/BookStoreRequest"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "status_code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "book": {
+                                                    "$ref": "#/components/schemas/BookResource"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity"
+                    }
+                },
+                "security": [
+                    {
+                        "Password Based": []
+                    }
+                ]
+            }
+        },
+        "/book/{book_id}": {
+            "put": {
+                "tags": [
+                    "book"
+                ],
+                "summary": "Update book",
+                "description": "Update book",
+                "operationId": "update",
+                "parameters": [
+                    {
+                        "name": "book_id",
+                        "in": "path",
+                        "description": "Book id",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/BookUpdateRequest"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "status_code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "book": {
+                                                    "$ref": "#/components/schemas/BookResource"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity"
+                    }
+                },
+                "security": [
+                    {
+                        "Password Based": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "book"
+                ],
+                "summary": "Delete book",
+                "description": "Delete book",
+                "operationId": "destroy",
+                "parameters": [
+                    {
+                        "name": "book_id",
+                        "in": "path",
+                        "description": "Book id",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "status_code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "message": {
+                                                    "example": "Book deleted"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "Password Based": []
+                    }
+                ]
+            }
+        },
+        "/book/search": {
+            "get": {
+                "tags": [
+                    "book"
+                ],
+                "summary": "Search book list",
+                "description": "Search book list",
+                "operationId": "search",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Pagination page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Pagination page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/book_search_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/book_search_title"
+                    },
+                    {
+                        "$ref": "#/components/parameters/book_search_description"
+                    },
+                    {
+                        "$ref": "#/components/parameters/book_search_short_description"
+                    },
+                    {
+                        "$ref": "#/components/parameters/book_search_user_id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "status_code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/BookCollection"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity"
+                    }
+                },
+                "security": [
+                    {
+                        "Password Based": []
+                    }
+                ]
+            }
+        },
+        "/oauth/token": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Login",
+                "description": "Login",
+                "operationId": "Login",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "grant_type",
+                                    "client_id",
+                                    "client_secret"
+                                ],
+                                "properties": {
+                                    "grant_type": {
+                                        "type": "string",
+                                        "example": "password"
+                                    },
+                                    "client_id": {
+                                        "type": "string",
+                                        "example": "id"
+                                    },
+                                    "client_secret": {
+                                        "type": "string",
+                                        "example": "secret"
+                                    },
+                                    "username": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@email.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token_type": {
+                                            "type": "string",
+                                            "example": "Bearer"
+                                        },
+                                        "expires_in": {
+                                            "type": "integer",
+                                            "example": "31536000"
+                                        },
+                                        "access_token": {
+                                            "type": "string",
+                                            "example": "access_token"
+                                        },
+                                        "refresh_token": {
+                                            "type": "string",
+                                            "example": "refresh_token"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                }
+            }
+        },
+        "/user/{user_id}/book/{book_id}": {
+            "post": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Add user book",
+                "description": "Add user book",
+                "operationId": "storeUserBook",
+                "responses": {
+                    "200": {
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "status_code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "message": {
+                                                    "example": "Book added"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "Password Based": []
+                    }
+                ]
+            }
+        },
+        "/user": {
             "post": {
                 "tags": [
                     "user"
@@ -32,13 +558,168 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Success response"
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "status_code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user": {
+                                                    "$ref": "#/components/schemas/UserResource"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "Unauthenticated"
                     },
                     "422": {
                         "description": "Unprocessable Entity"
+                    }
+                },
+                "security": []
+            }
+        },
+        "/user/{user_id}": {
+            "put": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Update user",
+                "description": "Update user",
+                "operationId": "update",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "description": "User id",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/UserUpdateRequest"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "status_code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user": {
+                                                    "$ref": "#/components/schemas/UserResource"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity"
+                    }
+                },
+                "security": [
+                    {
+                        "Password Based": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Delete user",
+                "description": "Delete user",
+                "operationId": "destroy",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "description": "User id",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "status_code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "message": {
+                                                    "example": "User deleted"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not found"
                     }
                 },
                 "security": [
@@ -65,8 +746,7 @@
                         }
                     },
                     "pagination": {
-                        "title": "pagination",
-                        "description": "Collection pagination data"
+                        "$ref": "#/components/schemas/PaginationResource"
                     }
                 },
                 "type": "object",
@@ -226,7 +906,121 @@
                 }
             }
         },
+        "parameters": {
+            "book_search_id": {
+                "name": "id",
+                "in": "query",
+                "description": "Filter books by id",
+                "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "book_search_title": {
+                "name": "title",
+                "in": "query",
+                "description": "Filter books by title",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "book_search_description": {
+                "name": "description",
+                "in": "query",
+                "description": "Filter books by description",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "book_search_short_description": {
+                "name": "short_description",
+                "in": "query",
+                "description": "Filter books by short description",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "book_search_user_id": {
+                "name": "user_id",
+                "in": "query",
+                "description": "Filter books by owner id",
+                "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            }
+        },
         "requestBodies": {
+            "BookStoreRequest": {
+                "description": "Book store request",
+                "required": true,
+                "content": {
+                    "multipart/form-data": {
+                        "schema": {
+                            "required": [
+                                "title",
+                                "description",
+                                "short_description"
+                            ],
+                            "properties": {
+                                "title": {
+                                    "title": "title",
+                                    "description": "Book title",
+                                    "format": "string",
+                                    "example": "Title"
+                                },
+                                "description": {
+                                    "title": "description",
+                                    "description": "Book description",
+                                    "format": "string",
+                                    "example": "Description"
+                                },
+                                "short_description": {
+                                    "title": "Short description",
+                                    "description": "Book short description",
+                                    "format": "string",
+                                    "example": "Short description"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "BookUpdateRequest": {
+                "description": "Book update request",
+                "required": true,
+                "content": {
+                    "multipart/form-data": {
+                        "schema": {
+                            "properties": {
+                                "title": {
+                                    "title": "title",
+                                    "description": "Book title",
+                                    "format": "string",
+                                    "example": "Title"
+                                },
+                                "description": {
+                                    "title": "description",
+                                    "description": "Book description",
+                                    "format": "string",
+                                    "example": "Description"
+                                },
+                                "short_description": {
+                                    "title": "Short description",
+                                    "description": "Book short description",
+                                    "format": "string",
+                                    "example": "Short description"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
             "UserStoreRequest": {
                 "description": "User store request",
                 "required": true,
@@ -255,7 +1049,7 @@
                                 },
                                 "email": {
                                     "title": "User name",
-                                    "description": "User's first name",
+                                    "description": "User email",
                                     "format": "string",
                                     "example": "user@email.com"
                                 },
@@ -270,6 +1064,55 @@
                                     "description": "Password",
                                     "format": "password",
                                     "example": "password"
+                                },
+                                "phone": {
+                                    "title": "phone",
+                                    "description": "User phone number",
+                                    "format": "string",
+                                    "example": "123456789"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "UserUpdateRequest": {
+                "description": "User update request",
+                "required": true,
+                "content": {
+                    "multipart/form-data": {
+                        "schema": {
+                            "properties": {
+                                "firstname": {
+                                    "title": "firstname",
+                                    "description": "User first name",
+                                    "format": "string",
+                                    "example": "Jan"
+                                },
+                                "lastname": {
+                                    "title": "lastname",
+                                    "description": "User last name",
+                                    "format": "string",
+                                    "example": "Kowalski"
+                                },
+                                "email": {
+                                    "title": "User name",
+                                    "description": "User email",
+                                    "format": "string",
+                                    "example": "new@email.com"
+                                },
+                                "slug": {
+                                    "title": "slug",
+                                    "description": "Slug",
+                                    "format": "string",
+                                    "example": "jan-kowalski"
+                                },
+                                "phone": {
+                                    "title": "phone",
+                                    "description": "User phone number",
+                                    "format": "string",
+                                    "example": "123456789"
                                 }
                             },
                             "type": "object"
