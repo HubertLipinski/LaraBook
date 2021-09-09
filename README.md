@@ -1,6 +1,10 @@
 # LaraBook
 Simple Book API
 
+### Specs
+- Php: 7.4 <br>
+- MySql: 5.6
+
 ## Startup guide
 ### Project
 ```bash
